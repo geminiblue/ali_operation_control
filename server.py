@@ -1,7 +1,11 @@
 from sanic import Sanic
 from sanic.response import json
 from sanic.exceptions import NotFound,ServerError,InvalidUsage
+from sanic_openapi import doc,swagger_blueprint, openapi_blueprint
 app = Sanic()
+app.config.API_CONTACT_EMAIL = 'oliyo@qq.com'
+app.blueprint(openapi_blueprint)
+app.blueprint(swagger_blueprint)
 
 @app.exception(NotFound)
 async def not_found(request,exception):
@@ -25,6 +29,8 @@ async def service_error(request,exception):
     },status=500)
 
 @app.route('/')
+@doc.summary("Default router by test")
+@doc.produces({ "user": { "name": str, "id": int } })
 async def test(request):
     return json({'hello': 'world'})
 
